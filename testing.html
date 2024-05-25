@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imam Habibi Code Vault</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            resize: none;
+        }
+
+        .btn {
+            margin-top: 10px;
+        }
+
+        #result, #keyResult {
+            white-space: pre-wrap;
+            background-color: #e9ecef;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            position: relative;
+        }
+
+        #copyButton, #openRawButton {
+            position: absolute;
+            top: 10px;
+            cursor: pointer;
+        }
+
+        #copyButton {
+            right: 50%;
+            transform: translateX(50%);
+        }
+
+        #openRawButton {
+            right: 10px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Imam Habibi's Secure Code Vault</h1>
+        <p class="text-center">Secure Your Code Like A Pro</p>
+        <form>
+            <div class="form-group">
+                <label for="codeInput">Enter Code:</label>
+                <textarea id="codeInput" class="form-control" rows="8" placeholder="Make a new vault by entering some code and saving..."></textarea>
+            </div>
+            <button type="button" class="btn btn-primary btn-block" onclick="saveCode()">Save Code</button>
+            <div id="keyResult" style="display: none;">
+                <strong>Your Vault Key:</strong>
+                <span id="generatedKey"></span>
+            </div>
+            <div class="form-group">
+                <label for="keyInput">Enter Code Key:</label>
+                <input type="text" id="keyInput" class="form-control" placeholder="Enter code key to retrieve...">
+            </div>
+            <button type="button" class="btn btn-success btn-block" onclick="loadCode()">Load Code</button>
+        </form>
+        <div id="result" style="display: none;">
+            <textarea id="loadedCode" class="form-control" rows="8"></textarea>
+            <button type="button" class="btn btn-secondary btn-block" onclick="saveChanges()">Save Changes</button>
+            <span id="copyButton" onclick="copyCode()">📋 Copy</span>
+            <span id="openRawButton" onclick="openRawCode()">⚡ Open Raw Code</span>
+        </div>
+    </div>
+
+    <footer>&copy; 2024 Imam Habibi Code Vault</footer>
+
+    <script>
+        let currentKey = '';
+
+        function saveCode() {
+            const code = document.getElementById('codeInput').value;
+            const key = new Date().getTime().toString();
+            localStorage.setItem(key, code);
+            document.getElementById('generatedKey').innerText = key;
+            document.getElementById('keyResult').style.display = 'block';
+            document.getElementById('codeInput').value = '';
+        }
+
+        function loadCode() {
+            const key = document.getElementById('keyInput').value;
+            const code = localStorage.getItem(key);
+            if (code) {
+                currentKey = key;
+                document.getElementById('loadedCode').value = code;
+                document.getElementById('result').style.display = 'block';
+            } else {
+                alert('Vault not found for key: ' + key);
+            }
+        }
+
+        function saveChanges() {
+            const updatedCode = document.getElementById('loadedCode').value;
+            if (currentKey) {
+                localStorage.setItem(currentKey, updatedCode);
+                alert('Changes saved successfully');
+            } else {
+                alert('No key loaded');
+            }
+        }
+
+        function copyCode() {
+            const copyText = document.getElementById('loadedCode');
+            copyText.select();
+            document.execCommand('copy');
+            alert('Code copied to clipboard');
+        }
+
+        function openRawCode() {
+            const rawCode = document.getElementById('loadedCode').value;
+            const blob = new Blob([rawCode], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            window.open(url);
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
